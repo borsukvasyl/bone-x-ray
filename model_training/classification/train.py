@@ -14,9 +14,9 @@ def train_classifier(config):
     model = get_model(model_config["name"], model_config)
 
     train_dataset = DummyDataset((3, 256, 256), (1,), num_samples=512)
-    train_dataset = DataLoader(train_dataset, batch_size=32)
+    train_dataset = DataLoader(train_dataset, batch_size=2)
     val_dataset = DummyDataset((3, 256, 256), (1,), num_samples=512)
-    val_dataset = DataLoader(val_dataset, batch_size=32)
+    val_dataset = DataLoader(val_dataset, batch_size=2)
 
     pl_model = ClassificationLightningModel(model=model, config=config)
     trainer = get_trainer(config)
