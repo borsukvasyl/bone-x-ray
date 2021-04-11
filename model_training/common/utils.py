@@ -1,6 +1,8 @@
 import logging
 import os
 
+import yaml
+
 
 def create_logger(name: str) -> logging.Logger:
     logger = logging.Logger(name)
@@ -10,3 +12,10 @@ def create_logger(name: str) -> logging.Logger:
     logger.addHandler(console_handler)
 
     return logger
+
+
+def load_yaml(x: str):
+    with open(x) as fd:
+        config = yaml.load(fd, yaml.FullLoader)
+        config["yaml_path"] = x
+        return config
