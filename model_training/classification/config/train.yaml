@@ -1,0 +1,16 @@
+train:
+  name: 123
+
+val:
+  name: 123
+
+model:
+  name: classifier
+  backbone: efficientnet_b0
+  num_classes: 1
+
+loss:
+  name: bce
+
+min_epochs: 10
+max_epochs: 20

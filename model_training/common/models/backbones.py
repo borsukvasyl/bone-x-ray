@@ -35,7 +35,7 @@ _NUM_CHANNELS = {
 
 
 def get_backbone(backbone_name: str, pretrained: bool = True):
-    model = get_model(backbone_name, pretrained=pretrained)
+    model = get_model(backbone_name, pretrained=pretrained).features
     num_channels = _NUM_CHANNELS[backbone_name]
     if backbone_name in _BACKBONES:
         backbone = nn.Sequential(model.init_block, model.stage1, model.stage2, model.stage3, model.stage4, model.stage5)
