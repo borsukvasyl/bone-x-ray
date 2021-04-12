@@ -4,6 +4,7 @@ from pytorch_lightning import Trainer
 def get_trainer(config):
     trainer = Trainer(
         # logger=...,
+        gpus=config["gpus"],
         precision=config.get("precision", 32),
         # callbacks=...,
         min_epochs=config["min_epochs"],
