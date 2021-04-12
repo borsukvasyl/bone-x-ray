@@ -1,12 +1,23 @@
 from pytorch_lightning import Trainer
+from pytorch_lightning.callbacks import ModelCheckpoint
+
+
+def _get_checkpoint_callback(config):
+    return ModelCheckpoint(
+        dirpath=config["checkpoint_path"],
+        monitor=config.get("monitor", "loss"),
+        mode=config.get("mode", "min"),
+        save_top_k=3,
+    )
 
 
 def get_trainer(config):
+    checkpoint = _get_checkpoint_callback(config)
     trainer = Trainer(
         # logger=...,
         gpus=config["gpus"],
         precision=config.get("precision", 32),
-        # callbacks=...,
+        callbacks=[checkpoint],
         min_epochs=config["min_epochs"],
         max_epochs=config["max_epochs"],
         val_check_interval=config.get("val_check_interval", 1.0),
