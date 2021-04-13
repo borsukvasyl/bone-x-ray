@@ -1,10 +1,19 @@
+import os
+
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.loggers import TensorBoardLogger
+
+
+def _get_logger(config):
+    save_dir = os.path.join(config["experiment_path"], "logs")
+    return [TensorBoardLogger(save_dir=save_dir)]
 
 
 def _get_checkpoint_callback(config):
+    dirpath = os.path.join(config["experiment_path"], "checkpoints")
     return ModelCheckpoint(
-        dirpath=config["checkpoint_path"],
+        dirpath=dirpath,
         monitor=config.get("monitor", "loss"),
         mode=config.get("mode", "min"),
         save_top_k=3,
@@ -14,7 +23,7 @@ def _get_checkpoint_callback(config):
 def get_trainer(config):
     checkpoint = _get_checkpoint_callback(config)
     trainer = Trainer(
-        # logger=...,
+        logger=_get_logger(config),
         gpus=config["gpus"],
         precision=config.get("precision", 32),
         callbacks=[checkpoint],
