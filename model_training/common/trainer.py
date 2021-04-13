@@ -17,6 +17,8 @@ def _get_checkpoint_callback(config):
         monitor=config.get("monitor", "loss"),
         mode=config.get("mode", "min"),
         save_top_k=3,
+        save_last=config.get("save_last", True),
+        verbose=True,
     )
 
 
