@@ -39,7 +39,7 @@ def get_backbone(backbone_name: str, pretrained: bool = True):
     num_channels = _NUM_CHANNELS[backbone_name]
     if backbone_name in _BACKBONES:
         backbone = nn.Sequential(model.init_block, model.stage1, model.stage2, model.stage3, model.stage4, model.stage5)
-    elif backbone_name in _BACKBONES:
+    elif backbone_name in _STAGED_BACKBONES:
         backbone = nn.Sequential(model.init_block, model.stage1, model.stage2, model.stage3, model.stage4)
     else:
         raise ValueError(f"Invalid backbone name [{backbone_name}]")
