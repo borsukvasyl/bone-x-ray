@@ -1,5 +1,5 @@
 # specifies path where to save models and logs
-experiment_path: experiment
+experiment_path: experiment_full
 
 # model config
 model:
@@ -40,6 +40,6 @@ metric_mode: min
 # trainer
 gpus: [0, 1]
 min_epochs: 10
-max_epochs: 20
+max_epochs: 30
 progress_bar_refresh_rate: 1
 batch_size: 8

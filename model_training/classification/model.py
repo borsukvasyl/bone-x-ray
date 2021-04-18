@@ -12,6 +12,7 @@ class ClassificationLightningModel(pl.LightningModule):
         self.config = config
         self.model = model
         self.loss = get_loss(config["loss"])
+        self.accuracy = pl.metrics.Accuracy()
 
     def forward(self, x):
         x = self.model(x)
@@ -24,6 +25,7 @@ class ClassificationLightningModel(pl.LightningModule):
 
         # logging
         self.log('train/loss', loss)
+        self.log('train/accuracy', self.accuracy(preds.sigmoid(), targets.int()), prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -33,6 +35,7 @@ class ClassificationLightningModel(pl.LightningModule):
 
         # logging
         self.log('val/loss', loss)
+        self.log('val/accuracy', self.accuracy(preds.sigmoid(), targets.int()))
 
     def configure_optimizers(self):
         # get optimizer
