@@ -42,4 +42,4 @@ gpus: 1
 min_epochs: 10
 max_epochs: 20
 progress_bar_refresh_rate: 1
-batch_size: 16
+batch_size: 8
