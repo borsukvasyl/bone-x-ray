@@ -10,14 +10,14 @@ model:
 # datasets
 train:
   name: mura_dataset
-  data_path: /content/gdrive/Shareddrives/DS@UCU-ML-Project/data/datasets.csv
+  data_path: /home/vasyl/work/tmp/MURA-v1.1/train_image_paths.csv
   img_size: 384
   prefix: /home/vasyl/work/tmp
 val:
   name: mura_dataset
-  data_path: /home/vasyl/work/tmp/MURA-v1.1/train_image_paths.csv
+  data_path: /home/vasyl/work/tmp/MURA-v1.1/valid_image_paths.csv
   img_size: 384
-  split: /home/vasyl/work/tmp
+  prefix: /home/vasyl/work/tmp
 
 # loss function
 loss:
@@ -42,4 +42,4 @@ gpus: [0, 1]
 min_epochs: 10
 max_epochs: 20
 progress_bar_refresh_rate: 1
-batch_size: 16
+batch_size: 8
