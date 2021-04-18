@@ -14,8 +14,8 @@ def _get_checkpoint_callback(config):
     dirpath = os.path.join(config["experiment_path"], "checkpoints")
     return ModelCheckpoint(
         dirpath=dirpath,
-        monitor=config.get("monitor", "loss"),
-        mode=config.get("mode", "min"),
+        monitor=config.get("metric_to_monitor", "loss"),
+        mode=config.get("metric_mode", "min"),
         save_top_k=3,
         save_last=config.get("save_last", True),
         verbose=True,

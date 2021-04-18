@@ -1,20 +1,45 @@
-train:
-  name: 123
+# specifies path where to save models and logs
+experiment_path: experiment
 
-val:
-  name: 123
-
+# model config
 model:
   name: classifier
   backbone: efficientnet_b0
   num_classes: 1
 
+# datasets
+train:
+  name: bones_dataset
+  data_path: /content/gdrive/Shareddrives/DS@UCU-ML-Project/data/datasets.csv
+  img_size: 384
+  split: train
+val:
+  name: bones_dataset
+  data_path: /content/gdrive/Shareddrives/DS@UCU-ML-Project/data/datasets.csv
+  img_size: 384
+  split: valid
+
+# loss function
 loss:
   name: bce
 
+# optimizer and scheduler configs
+optimizer:
+  lr: 1e-4
+scheduler:
+  metric_to_monitor: train/loss
+  metric_mode: min
+  patience: 5
+  factor: 0.5
+  min_lr: 1e-6
+
+# checkpoint callback
+metric_to_monitor: train/loss
+metric_mode: min
+
+# trainer
 gpus: 1
 min_epochs: 10
 max_epochs: 20
 progress_bar_refresh_rate: 1
-
-experiment_path: experiment
+batch_size: 16
