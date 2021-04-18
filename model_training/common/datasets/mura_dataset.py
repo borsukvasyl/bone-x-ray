@@ -1,6 +1,7 @@
 import os
 
 import albumentations as albu
+import cv2
 import numpy as np
 import pandas as pd
 from pytorch_toolbelt.utils import image_to_tensor
@@ -30,6 +31,8 @@ class MURADataset(Dataset):
             print(e)
             return self[0]
 
+        if image.ndim == 2:
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
         image = self.transform(image=image)["image"]
         image = image_to_tensor(image)
 
