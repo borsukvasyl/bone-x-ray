@@ -1,7 +1,9 @@
 from model_training.common.datasets.bones_dataset import BonesDataset
+from model_training.common.datasets.mura_dataset import MURADataset
 
 _DATASETS = {
-    "bones_dataset": BonesDataset
+    "bones_dataset": BonesDataset,
+    "mura_dataset": MURADataset,
 }
 
 

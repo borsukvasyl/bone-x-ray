@@ -4,20 +4,20 @@ experiment_path: experiment
 # model config
 model:
   name: classifier
-  backbone: efficientnet_b0
+  backbone: efficientnet_b3b
   num_classes: 1
 
 # datasets
 train:
-  name: bones_dataset
+  name: mura_dataset
   data_path: /content/gdrive/Shareddrives/DS@UCU-ML-Project/data/datasets.csv
   img_size: 384
-  split: train
+  prefix: /home/vasyl/work/tmp
 val:
-  name: bones_dataset
-  data_path: /content/gdrive/Shareddrives/DS@UCU-ML-Project/data/datasets.csv
+  name: mura_dataset
+  data_path: /home/vasyl/work/tmp/MURA-v1.1/train_image_paths.csv
   img_size: 384
-  split: valid
+  split: /home/vasyl/work/tmp
 
 # loss function
 loss:
@@ -38,7 +38,7 @@ metric_to_monitor: train/loss
 metric_mode: min
 
 # trainer
-gpus: 1
+gpus: [0, 1]
 min_epochs: 10
 max_epochs: 20
 progress_bar_refresh_rate: 1
