@@ -9,6 +9,7 @@ pytorch-lightning-bolts==0.3.2
 pytorchcv==0.0.65
 pytorch-toolbelt==0.4.3
 PyYAML==5.3.1
+scikit-learn==0.24.1
 scikit-image==0.17.2
 scipy==1.5.4
 tensorboard==2.4.1
