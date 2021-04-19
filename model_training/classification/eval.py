@@ -16,7 +16,7 @@ def make_predictions(model, pl_dataset):
         imgs, targets = batch
         imgs = imgs.cuda()
         with torch.no_grad():
-            preds = model(imgs).cpu().numpy()
+            preds = model(imgs).sigmoid().cpu().numpy()
         model_predictions.append(preds)
         target_labels.append(targets)
     model_predictions = np.vstack(model_predictions)
