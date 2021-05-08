@@ -2,7 +2,6 @@ import os
 
 import albumentations as albu
 import cv2
-import numpy as np
 import pandas as pd
 from pytorch_toolbelt.utils import image_to_tensor
 from skimage.io import imread
@@ -37,7 +36,6 @@ class MURADataset(Dataset):
         image = image_to_tensor(image)
 
         label = int("_positive/" in image_path)
-        label = np.array([float(label)])
 
         return image, label
 

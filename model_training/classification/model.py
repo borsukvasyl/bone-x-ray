@@ -20,22 +20,22 @@ class ClassificationLightningModel(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         images, targets = batch
-        preds = self.model(images)
-        loss = self.loss(preds, targets)
+        out = self.model(images)
+        loss = self.loss(out, targets)
 
         # logging
         self.log('train/loss', loss, on_epoch=True)
-        self.log('train/accuracy', self.accuracy(preds.sigmoid(), targets.int()), prog_bar=True, on_epoch=True)
+        self.log('train/accuracy', self.accuracy(out.softmax(1), targets), prog_bar=True, on_epoch=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
         images, targets = batch
-        preds = self.model(images)
-        loss = self.loss(preds, targets)
+        out = self.model(images)
+        loss = self.loss(out, targets)
 
         # logging
         self.log('val/loss', loss, on_epoch=True)
-        self.log('val/accuracy', self.accuracy(preds.sigmoid(), targets.int()), on_epoch=True)
+        self.log('val/accuracy', self.accuracy(out.softmax(1), targets), on_epoch=True)
 
     def configure_optimizers(self):
         # get optimizer

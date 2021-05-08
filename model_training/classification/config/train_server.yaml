@@ -1,12 +1,12 @@
 # specifies path where to save models and logs
-experiment_path: experiment_densenet161
+experiment_path: experiment_densenet121
 
 # model config
 model:
   name: classifier
-  backbone: densenet161
-  num_classes: 1
-  head: two_layer
+  backbone: densenet121
+  num_classes: 2
+  head: simple
 
 # datasets
 img_size: 384
@@ -23,7 +23,7 @@ val:
 
 # loss function
 loss:
-  name: bce
+  name: cross_entropy
 
 # optimizer and scheduler configs
 optimizer:
@@ -40,7 +40,7 @@ metric_to_monitor: val/accuracy
 metric_mode: max
 
 # trainer
-gpus: [0, 1]
+gpus: 1  # [0, 1]
 min_epochs: 10
 max_epochs: 30
 progress_bar_refresh_rate: 1
