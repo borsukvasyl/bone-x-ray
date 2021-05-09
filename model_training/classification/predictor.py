@@ -29,6 +29,6 @@ class ClassificationPredictor:
         img = image_to_tensor(img)[None, ...]
 
         with torch.no_grad():
-            pred = self.pl_model(img.cuda()).sigmoid().cpu()
+            pred = self.pl_model(img.cuda()).argmax(1).cpu()
             pred = np.squeeze(pred.numpy())
         return pred

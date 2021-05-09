@@ -1,5 +1,6 @@
 from typing import Dict, Any
 
+import torch
 from torch import nn
 
 _LOSSES = {
@@ -10,4 +11,8 @@ _LOSSES = {
 
 def get_loss(loss_config: Dict[str, Any]):
     loss_name = loss_config.pop("name")
-    return _LOSSES[loss_name](**loss_config)
+    weights = None
+    if "weights" in loss_config:
+        weights = loss_config.pop("weights")
+        weights = torch.tensor(weights)
+    return _LOSSES[loss_name](weight=weights, **loss_config)
