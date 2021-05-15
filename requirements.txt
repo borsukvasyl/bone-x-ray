@@ -17,5 +17,3 @@ torch==1.8.1
 torchmetrics==0.2.0
 torchvision==0.9.1
 tqdm==4.60.0
-
--e git+https://github.com/yiskw713/ScoreCAM#egg=ScoreCAM
