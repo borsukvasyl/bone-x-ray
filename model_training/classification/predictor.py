@@ -1,34 +1,19 @@
-import albumentations as albu
-import numpy as np
-import torch
-from pytorch_toolbelt.utils import image_to_tensor
+from typing import Dict
 
-from model_training.classification.model import ClassificationLightningModel
+from bone_xray.base import BaseClassificationPredictor, BaseLocalizationPredictor
 from model_training.common.models import get_model
 
 
-class ClassificationPredictor:
-    def __init__(self, config, checkpoint_path):
+class CkptClassificationPredictor(BaseClassificationPredictor):
+    def __init__(self, config: Dict, checkpoint_path: str):
         model_config = config["model"]
-        model = get_model(model_config["name"], model_config)
+        model = get_model(model_config["name"], model_config, model_weights=checkpoint_path)
+        super().__init__(model, config["img_size"])
 
-        self.pl_model = ClassificationLightningModel.load_from_checkpoint(
-            checkpoint_path,
-            model=model,
-            config=config
-        )
-        self.pl_model = self.pl_model.eval().cuda()
 
-        self.transform = albu.Compose([
-            albu.Resize(config["img_size"], config["img_size"]),
-            albu.Normalize(mean=0.5, std=0.5)
-        ])
-
-    def __call__(self, img):
-        img = self.transform(image=img)["image"]
-        img = image_to_tensor(img)[None, ...]
-
-        with torch.no_grad():
-            pred = self.pl_model(img.cuda()).argmax(1).cpu()
-            pred = np.squeeze(pred.numpy())
-        return pred
+class CkptLocalizationPredictor(BaseLocalizationPredictor):
+    def __init__(self, config: Dict, checkpoint_path: str):
+        model_config = config["model"]
+        model = get_model(model_config["name"], model_config, model_weights=checkpoint_path)
+        cam_layer = self.model.model.backbone[4].unit16.conv2.conv
+        super().__init__(model, cam_layer, config["img_size"])
