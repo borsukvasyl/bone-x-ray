@@ -10,7 +10,7 @@ from skimage.io import imread
 from sklearn.metrics import cohen_kappa_score, accuracy_score, confusion_matrix, classification_report
 
 from model_training.classification.predictor import CkptClassificationPredictor
-from model_training.common.utils import load_yaml
+from bone_xray.utils import load_yaml
 
 
 def parse_mura_dataset(dataset_labels_path: str, prefix: str):

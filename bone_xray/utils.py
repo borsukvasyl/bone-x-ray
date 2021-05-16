@@ -19,3 +19,7 @@ def load_yaml(x: str):
         config = yaml.load(fd, yaml.FullLoader)
         config["yaml_path"] = x
         return config
+
+
+def get_relative_path(path: str, relative_to: str) -> str:
+    return os.path.join(os.path.dirname(relative_to), path)

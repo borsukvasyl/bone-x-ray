@@ -3,7 +3,7 @@ from fire import Fire
 from model_training.classification.data import BonesDataModule
 from model_training.classification.model import ClassificationLightningModel
 from model_training.common.trainer import get_trainer
-from model_training.common.utils import load_yaml
+from bone_xray.utils import load_yaml
 from model_training.common.models import get_model
 
 
