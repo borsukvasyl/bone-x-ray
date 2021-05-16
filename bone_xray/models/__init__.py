@@ -2,7 +2,7 @@ from typing import Dict, Any, Optional
 
 import torch
 
-from model_training.common.models.classifier import Classifier
+from bone_xray.models import Classifier
 
 _MODELS = {
     "classifier": Classifier,

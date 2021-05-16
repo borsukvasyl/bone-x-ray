@@ -4,7 +4,7 @@ from model_training.classification.data import BonesDataModule
 from model_training.classification.model import ClassificationLightningModel
 from model_training.common.trainer import get_trainer
 from bone_xray.utils import load_yaml
-from model_training.common.models import get_model
+from bone_xray.models import get_model
 
 
 def train_classifier(config):

@@ -1,14 +1,11 @@
-from typing import Optional
-
-import torch
+from typing import Dict
 
 from bone_xray.base import BaseClassificationPredictor
-from bone_xray.utils import get_relative_path
+from bone_xray.models import get_model
 
 
 class ClassificationPredictor(BaseClassificationPredictor):
-    def __init__(self, checkpoint_path: Optional[str] = None, img_size: int = 384):
-        if checkpoint_path is None:
-            checkpoint_path = get_relative_path("models/densenet121.trcd", __file__)
-        model = torch.jit.load(checkpoint_path)
-        super().__init__(model, img_size)
+    def __init__(self, config: Dict, checkpoint_path: str):
+        model_config = config["model"]
+        model = get_model(model_config["name"], model_config, model_weights=checkpoint_path)
+        super().__init__(model, config["img_size"])

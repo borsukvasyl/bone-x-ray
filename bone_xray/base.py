@@ -6,7 +6,7 @@ import numpy as np
 import torch
 from pytorch_toolbelt.utils import image_to_tensor
 
-from bone_xray.cam import ScoreCAM
+from bone_xray.models.cam import ScoreCAM
 
 
 class BasePredictor(ABC):

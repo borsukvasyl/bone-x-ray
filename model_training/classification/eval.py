@@ -9,7 +9,7 @@ from fire import Fire
 from skimage.io import imread
 from sklearn.metrics import cohen_kappa_score, accuracy_score, confusion_matrix, classification_report
 
-from model_training.classification.predictor import CkptClassificationPredictor
+from bone_xray.classifier import ClassificationPredictor
 from bone_xray.utils import load_yaml
 
 
@@ -78,7 +78,7 @@ def evaluate_classification(predictor, data):
 
 def main(config_path: str, checkpoint_path: str, csv_path: str, prefix: str):
     config = load_yaml(config_path)
-    predictor = CkptClassificationPredictor(config, checkpoint_path)
+    predictor = ClassificationPredictor(config, checkpoint_path)
     data = parse_mura_dataset(csv_path, prefix)
     evaluate_classification(predictor, data)
 

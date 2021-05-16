@@ -1,11 +1,10 @@
-from typing import Optional
+from typing import Dict
 
 import cv2
 import numpy as np
-import torch
 
 from bone_xray.base import BaseLocalizationPredictor
-from bone_xray.utils import get_relative_path
+from bone_xray.models import get_model
 
 
 def visualize_heatmap(img: np.ndarray,
@@ -20,9 +19,8 @@ def visualize_heatmap(img: np.ndarray,
 
 
 class LocalizationPredictor(BaseLocalizationPredictor):
-    def __init__(self, checkpoint_path: Optional[str], img_size: int = 384):
-        if checkpoint_path is None:
-            checkpoint_path = get_relative_path("models/densenet121.trcd", __file__)
-        model = torch.jit.load(checkpoint_path)
+    def __init__(self, config: Dict, checkpoint_path: str):
+        model_config = config["model"]
+        model = get_model(model_config["name"], model_config, model_weights=checkpoint_path)
         cam_layer = model.backbone[4].unit16.conv2.conv
-        super().__init__(model, cam_layer, img_size)
+        super().__init__(model, cam_layer, config["img_size"])
