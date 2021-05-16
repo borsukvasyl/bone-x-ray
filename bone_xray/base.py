@@ -40,9 +40,8 @@ class BasePredictor(ABC):
 class BaseClassificationPredictor(BasePredictor):
     def _process(self, x: torch.Tensor):
         with torch.no_grad():
-            pred = self.model(x.cuda()).cpu()
-            idx = pred.argmax(1)
-            pred = np.squeeze(pred[idx].numpy())
+            pred = self.model(x.cuda()).softmax(1).cpu()
+            pred = pred[0, 1]  # probability of positive label
         return pred
 
 

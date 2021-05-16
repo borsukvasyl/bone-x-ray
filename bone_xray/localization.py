@@ -19,5 +19,5 @@ def visualize_heatmap(img: np.ndarray,
 class LocalizationPredictor(BaseLocalizationPredictor):
     def __init__(self, checkpoint_path: str, img_size: int = 384):
         model = torch.jit.load(checkpoint_path)
-        cam_layer = self.model.model.backbone[4].unit16.conv2.conv
+        cam_layer = model.backbone[4].unit16.conv2.conv
         super().__init__(model, cam_layer, img_size)
