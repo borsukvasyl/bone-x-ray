@@ -9,6 +9,10 @@ from pytorch_toolbelt.utils import image_to_tensor
 from bone_xray.models.cam import ScoreCAM
 
 
+def to_device(x: Union[torch.Tensor, torch.nn.Module], cuda_id: int = 0):
+    return x.cuda(cuda_id) if torch.cuda.is_available() else x
+
+
 class BasePredictor(ABC):
     def __init__(
             self,
@@ -17,7 +21,7 @@ class BasePredictor(ABC):
             mean: Union[float, np.ndarray] = 0.5,
             std: Union[float, np.ndarray] = 0.5
     ):
-        self.model = model.cuda().eval()
+        self.model = to_device(model.eval())
         self.transform = albu.Compose([
             albu.Resize(img_size, img_size),
             albu.Normalize(mean=mean, std=std)
@@ -40,7 +44,8 @@ class BasePredictor(ABC):
 class BaseClassificationPredictor(BasePredictor):
     def _process(self, x: torch.Tensor):
         with torch.no_grad():
-            pred = self.model(x.cuda()).softmax(1).cpu()
+            x = to_device(x)
+            pred = self.model(x).softmax(1).cpu()
             pred = pred[0, 1]  # probability of positive label
         return pred
 
@@ -52,5 +57,6 @@ class BaseLocalizationPredictor(BasePredictor):
 
     def _process(self, x: torch.Tensor):
         with torch.no_grad():
-            cam, _ = self.model(x.cuda())
+            x = to_device(x)
+            cam, _ = self.model(x)
         return cam.squeeze().numpy()

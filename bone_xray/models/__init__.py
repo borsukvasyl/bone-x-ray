@@ -9,9 +9,10 @@ _MODELS = {
 }
 
 
-def load_weights(model: torch.nn.Module, model_weights: str):
-    weights = torch.load(model_weights)
+def load_weights(model: torch.nn.Module, model_weights: str, map_location: str = "cpu"):
+    weights = torch.load(model_weights, map_location=map_location)
     state_dict = {k.lstrip("model").lstrip("."): v for k, v in weights["state_dict"].items()}
+    state_dict.pop("ss.weight", None)
     model.load_state_dict(state_dict)
 
 
