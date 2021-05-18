@@ -1,5 +1,3 @@
-import os
-
 import cv2
 import yaml
 import numpy as np
@@ -31,5 +29,6 @@ def test_classifier():
     CHECKPOINT_PATH = 'tests/files/epoch=26-step=124226.ckpt'
     classifier = ClassificationPredictor(config, CHECKPOINT_PATH)
     img = imread('tests/fixtures/image1.png')
+    img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     pred = classifier(img)
-    assert isinstance(pred, float)
+    assert pred.dtype == torch.float32
