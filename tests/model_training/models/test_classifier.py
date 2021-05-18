@@ -9,9 +9,12 @@ import torch
 from skimage.io import imread
 from sklearn.metrics import cohen_kappa_score, accuracy_score, confusion_matrix
 
-from model_training.classification.predictor import ClassificationPredictor
+from typing import Dict
+
+from bone_xray.base import BaseClassificationPredictor
+from bone_xray.classifier import ClassificationPredictor
 from model_training.classification.model import ClassificationLightningModel
-from model_training.common.models import get_model
+from bone_xray.classifier import get_model
 from model_training.common.loss import get_loss
 
 
@@ -27,6 +30,6 @@ def test_classifier():
     """)
     CHECKPOINT_PATH = 'tests/files/epoch=26-step=124226.ckpt'
     classifier = ClassificationPredictor(config, CHECKPOINT_PATH)
-    img = imread('tests/files/image1.png')
+    img = imread('tests/fixtures/image1.png')
     pred = classifier(img)
     assert isinstance(pred, float)
