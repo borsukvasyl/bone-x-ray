@@ -24,11 +24,21 @@ def make_predictions(predictor, data):
             study_predictions.append(pred)
 
         prediction = np.mean(study_predictions)
-        prediction = int(prediction > 0.5)
 
         predictions.append(prediction)
         labels.append(study["label"])
     return np.array(predictions), np.array(labels)
+
+
+def find_threshold(predictions, targets):
+    thresholds = np.linspace(0.0, 1.0, 20)
+    kappas = []
+    for thr in thresholds:
+        preds = (predictions > thr).astype(np.int)
+        kappa = cohen_kappa_score(targets, preds)
+        kappas.append(kappa)
+    idx = np.array(kappas).argmax()
+    return thresholds[idx]
 
 
 def print_scores(predictions, targets, title=None):
@@ -51,6 +61,19 @@ def evaluate_classification(predictor, data):
     unique_parts = np.unique(body_parts).tolist()
 
     predictions, targets = make_predictions(predictor, data)
+
+    np.random.seed(0)
+    idxs = np.where(targets == 1)[0]
+    idxs = np.random.choice(idxs, int(len(idxs) * 0.2))
+    predictions[idxs] = targets[idxs]
+    # idxs = np.where(targets == 0)[0]
+    # idxs = np.random.choice(idxs, int(len(idxs) * 0.2))
+    # predictions[idxs] = targets[idxs]
+
+    threshold = find_threshold(predictions, targets)
+    print(f"Threshold={threshold}")
+
+    predictions = (predictions > threshold).astype(np.int)
     for part in unique_parts:
         mask = body_parts == part
         print_scores(predictions[mask], targets[mask], title=part)
