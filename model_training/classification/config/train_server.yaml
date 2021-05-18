@@ -1,5 +1,5 @@
 # specifies path where to save models and logs
-experiment_path: experiment_densenet121
+experiment_path: experiment_densenet121_weighted
 
 # model config
 model:
@@ -24,6 +24,7 @@ val:
 # loss function
 loss:
   name: cross_entropy
+  weights: [0.4, 0.6]
 
 # optimizer and scheduler configs
 optimizer:
@@ -40,8 +41,8 @@ metric_to_monitor: val/accuracy
 metric_mode: max
 
 # trainer
-gpus: 1  # [0, 1]
+gpus: [0, 1]
 min_epochs: 10
-max_epochs: 30
+max_epochs: 80
 progress_bar_refresh_rate: 1
 batch_size: 8

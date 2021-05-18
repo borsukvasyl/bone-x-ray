@@ -1,30 +1,13 @@
-import glob
-import os
-
 import cv2
 import numpy as np
-import pandas as pd
 import tqdm
 from fire import Fire
 from skimage.io import imread
 from sklearn.metrics import cohen_kappa_score, accuracy_score, confusion_matrix, classification_report
 
-from model_training.classification.predictor import ClassificationPredictor
-from model_training.common.utils import load_yaml
-
-
-def parse_mura_dataset(dataset_labels_path: str, prefix: str):
-    data = pd.read_csv(dataset_labels_path, header=None, names=["study", "label"])
-    result = []
-    for _, row in data.iterrows():
-        images = glob.glob(os.path.join(prefix, row.study, "*"))
-        parsed = {
-            "images": images,
-            "study": row.study,
-            "label": row.label,
-        }
-        result.append(parsed)
-    return result
+from bone_xray.classifier import ClassificationPredictor
+from bone_xray.data import parse_mura_dataset
+from bone_xray.utils import load_yaml
 
 
 def make_predictions(predictor, data):
@@ -48,19 +31,30 @@ def make_predictions(predictor, data):
     return np.array(predictions), np.array(labels)
 
 
-def evaluate_classification(predictor, data):
-    predictions, targets = make_predictions(predictor, data)
-
+def print_scores(predictions, targets, title=None):
     accuracy = accuracy_score(targets, predictions)
     kappa = cohen_kappa_score(targets, predictions)
     cf_matrix = confusion_matrix(targets, predictions)
     report = classification_report(targets, predictions)
 
+    if title is not None:
+        print("-" * 10, title, "-" * 10)
     print(f"Accuracy: {accuracy}")
     print(f"Kappa: {kappa}")
     print(f"Confusion matrix:")
     print(cf_matrix)
     print(report)
+
+
+def evaluate_classification(predictor, data):
+    body_parts = np.array([i["part"] for i in data])
+    unique_parts = np.unique(body_parts).tolist()
+
+    predictions, targets = make_predictions(predictor, data)
+    for part in unique_parts:
+        mask = body_parts == part
+        print_scores(predictions[mask], targets[mask], title=part)
+    print_scores(predictions, targets, title="Total")
 
 
 def main(config_path: str, checkpoint_path: str, csv_path: str, prefix: str):

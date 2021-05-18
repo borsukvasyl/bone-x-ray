@@ -2,7 +2,7 @@ from typing import Dict, Any
 
 from torch import nn
 
-from model_training.common.models.backbones import get_backbone
+from bone_xray.models.backbones import get_backbone
 
 
 class Classifier(nn.Module):
