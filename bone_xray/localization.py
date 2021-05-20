@@ -6,6 +6,7 @@ import torch
 
 from bone_xray.base import BasePredictor, to_device
 from bone_xray.models import get_model
+from bone_xray.models.cam import ScoreCAM
 
 
 def visualize_heatmap(img: np.ndarray,
@@ -24,10 +25,11 @@ class LocalizationPredictor(BasePredictor):
         model_config = config["model"]
         model = get_model(model_config["name"], model_config, model_weights=checkpoint_path)
         cam_layer = model.backbone[4].unit16.conv2.conv
-        super().__init__(model, cam_layer, config["img_size"])
+        cam_model = ScoreCAM(model, cam_layer)
+        super().__init__(cam_model, config["img_size"])
 
     def _process(self, x: torch.Tensor):
         with torch.no_grad():
             x = to_device(x)
-            cam, _ = self.model(x)
+            cam, _ = self.model.forward(x, idx=1)
         return cam.squeeze().numpy()
