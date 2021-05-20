@@ -14,4 +14,5 @@ setup(
     author="Vasyl Borsuk, Mariia Kokshaikyna, Oleksandra Klochko",
     packages=find_packages(include=['bone_xray', 'bone_xray.*']),
     install_requires=parse_requirements("requirements.txt"),
+    include_package_data=True,
 )
