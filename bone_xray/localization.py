@@ -2,8 +2,9 @@ from typing import Dict
 
 import cv2
 import numpy as np
+import torch
 
-from bone_xray.base import BaseLocalizationPredictor
+from bone_xray.base import BasePredictor, to_device
 from bone_xray.models import get_model
 
 
@@ -18,9 +19,15 @@ def visualize_heatmap(img: np.ndarray,
     return (img * (1 - mask[..., np.newaxis]) + heatmap * mask[..., np.newaxis]).astype(np.uint8)
 
 
-class LocalizationPredictor(BaseLocalizationPredictor):
+class LocalizationPredictor(BasePredictor):
     def __init__(self, config: Dict, checkpoint_path: str):
         model_config = config["model"]
         model = get_model(model_config["name"], model_config, model_weights=checkpoint_path)
         cam_layer = model.backbone[4].unit16.conv2.conv
         super().__init__(model, cam_layer, config["img_size"])
+
+    def _process(self, x: torch.Tensor):
+        with torch.no_grad():
+            x = to_device(x)
+            cam, _ = self.model(x)
+        return cam.squeeze().numpy()
