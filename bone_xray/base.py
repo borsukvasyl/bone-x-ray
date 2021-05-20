@@ -21,6 +21,7 @@ def get_default_model():
             "backbone": "densenet121",
             "num_classes": 2,
             "head": "simple",
+            "pretrained": False,
         }
     }
     weights_path = get_relative_path("weights/densenet121.ckpt", __file__)
