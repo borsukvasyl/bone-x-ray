@@ -6,9 +6,25 @@ import numpy as np
 import torch
 from pytorch_toolbelt.utils import image_to_tensor
 
+from bone_xray.utils import get_relative_path
+
 
 def to_device(x: Union[torch.Tensor, torch.nn.Module], cuda_id: int = 0):
     return x.cuda(cuda_id) if torch.cuda.is_available() else x
+
+
+def get_default_model():
+    config = {
+        "img_size": 384,
+        "model": {
+            "name": "classifier",
+            "backbone": "densenet121",
+            "num_classes": 2,
+            "head": "simple",
+        }
+    }
+    weights_path = get_relative_path("weights/densenet121.ckpt", __file__)
+    return config, weights_path
 
 
 class BasePredictor(ABC):

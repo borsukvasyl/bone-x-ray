@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import torch
 
-from bone_xray.base import BasePredictor, to_device
+from bone_xray.base import BasePredictor, to_device, get_default_model
 from bone_xray.models import get_model
 from bone_xray.models.cam import ScoreCAM
 
@@ -33,3 +33,9 @@ class LocalizationPredictor(BasePredictor):
             x = to_device(x)
             cam, _ = self.model.forward(x, idx=1)
         return cam.squeeze().numpy()
+
+
+class Densenet121LocalizationPredictor(LocalizationPredictor):
+    def __init__(self):
+        config, checkpoint_path = get_default_model()
+        super().__init__(config, checkpoint_path)

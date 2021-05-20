@@ -2,7 +2,7 @@ from typing import Dict
 
 import torch
 
-from bone_xray.base import BasePredictor, to_device
+from bone_xray.base import BasePredictor, to_device, get_default_model
 from bone_xray.models import get_model
 
 
@@ -18,3 +18,9 @@ class ClassificationPredictor(BasePredictor):
             pred = self.model(x).softmax(1).cpu()
             pred = pred[0, 1]  # probability of positive label
         return pred
+
+
+class Densenet121ClassificationPredictor(ClassificationPredictor):
+    def __init__(self):
+        config, checkpoint_path = get_default_model()
+        super().__init__(config, checkpoint_path)
