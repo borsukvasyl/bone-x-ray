@@ -62,14 +62,6 @@ def evaluate_classification(predictor, data):
 
     predictions, targets = make_predictions(predictor, data)
 
-    np.random.seed(0)
-    idxs = np.where(targets == 1)[0]
-    idxs = np.random.choice(idxs, int(len(idxs) * 0.2))
-    predictions[idxs] = targets[idxs]
-    # idxs = np.where(targets == 0)[0]
-    # idxs = np.random.choice(idxs, int(len(idxs) * 0.2))
-    # predictions[idxs] = targets[idxs]
-
     threshold = find_threshold(predictions, targets)
     print(f"Threshold={threshold}")
 
