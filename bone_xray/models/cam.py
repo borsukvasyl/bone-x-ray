@@ -24,6 +24,75 @@ class SaveValues:
         self.backward_hook.remove()
 
 
+class CAM(torch.nn.Module):
+    """ Class Activation Mapping """
+
+    def __init__(self, model, target_layer):
+        """
+        Args:
+            model: a base model to get CAM which have global pooling and fully connected layer.
+            target_layer: conv_layer before Global Average Pooling
+        """
+
+        super().__init__()
+        self.model = model
+        self.target_layer = target_layer
+
+        # save values of activations and gradients in target_layer
+        self.values = SaveValues(self.target_layer)
+
+    def forward(self, x, idx=None):
+        """
+        Args:
+            x: input image. shape =>(1, 3, H, W)
+        Return:
+            heatmap: class activation mappings of the predicted class
+        """
+
+        # object classification
+        score = self.model(x)
+
+        prob = F.softmax(score, dim=1)
+
+        if idx is None:
+            prob, idx = torch.max(prob, dim=1)
+            idx = idx.item()
+            prob = prob.item()
+            print("predicted class ids {}\t probability {}".format(idx, prob))
+
+        # cam can be calculated from the weights of linear layer and activations
+        weight_fc = list(
+            self.model._modules.get('fc').parameters())[0].to('cpu').data
+
+        cam = self.getCAM(self.values, weight_fc, idx)
+
+        return cam, idx
+
+    def __call__(self, x):
+        return self.forward(x)
+
+    def getCAM(self, values, weight_fc, idx):
+        '''
+        values: the activations and gradients of target_layer
+            activations: feature map before GAP.  shape => (1, C, H, W)
+        weight_fc: the weight of fully connected layer.  shape => (num_classes, C)
+        idx: predicted class id
+        cam: class activation map.  shape => (1, num_classes, H, W)
+        '''
+
+        cam = F.conv2d(values.activations, weight=weight_fc[:, :, None, None])
+        _, _, h, w = cam.shape
+
+        # class activation mapping only for the predicted class
+        # cam is normalized with min-max.
+        cam = cam[:, idx, :, :]
+        cam -= torch.min(cam)
+        cam /= torch.max(cam)
+        cam = cam.view(1, 1, h, w)
+
+        return cam.data
+
+
 class ScoreCAM(CAM):
     """ Score CAM """
 
