@@ -1,7 +1,7 @@
 # Bone fracture localization
 
 ## Installation
-Install with `pip` code for model inference
+Install code for model inference with `pip`
 ```shell
 pip install git+https://github.com/borsukvasyl/bone-x-ray.git
 ```
