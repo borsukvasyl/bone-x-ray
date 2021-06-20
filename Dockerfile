@@ -1,11 +1,11 @@
-FROM python:3.9.5-slim
+FROM python:3.6-slim-stretch
 
-WORKDIR /usr/app/src
+WORKDIR /app
 
-COPY requirements.txt requirements.txt
+COPY requirements.txt ./requirements.txt
 
-RUN pip install --no-cache-dir numpy scipy pandas matplotlib -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-COPY app ./
+COPY . /app
 
-CMD ["sh", "-c", "streamlit run --server.port $PORT /usr/app/src/main.py"]
+CMD streamlit run --server.port $PORT app.py
