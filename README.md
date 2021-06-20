@@ -40,3 +40,34 @@ PYTHONPATH="." python model_training/classification/train.py model_training/clas
 
 Training code for simple image classification network is located in `model_training/classification`.
 Backbone architectures, models and training utilities are in `model_training/common`.
+
+## User UI
+
+User UI is implemented with streamlit.io
+
+### To run with Docker
+
+in Dockerfile change:
+
+```
+streamlit run --server.port $PORT app.py
+```
+
+to
+
+```
+streamlit run app.py
+```
+Then run:
+```
+docker build -t mystapp:latest .
+docker run -p 8501:8501
+```
+
+### To run without Docker
+
+
+```
+pip3 install streamlit
+streamlit run app.py
+```
